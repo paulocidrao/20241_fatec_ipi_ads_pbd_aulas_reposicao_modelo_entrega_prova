@@ -37,12 +37,43 @@ DO $$
     END LOOP;  
 
     CLOSE cur_aprovados_pais_phd;
-END $$
+END $$;
 
 -- ----------------------------------------------------------------
 -- 3 Resultado em função dos estudos
 --escreva a sua solução aqui
 
+DO $$
+    DECLARE
+        cur_alunos_sozinhos REFCURSOR;
+
+        v_student int;
+        v_nome_tabela VARCHAR(200) := 'tb_student_prediction';
+        v_partner int := 2;
+    BEGIN
+        OPEN cur_alunos_sozinhos FOR EXECUTE
+        FORMAT(
+            '
+                SELECT count(studentid)
+                from %s
+                WHERE partner = $1
+                AND grade > 0
+
+            ',
+            v_nome_tabela
+        )USING v_partner;
+        
+    LOOP
+        FETCH cur_alunos_sozinhos into v_student;
+        EXIT WHEN NOT FOUND;
+        IF v_student = 0 THEN
+            RAISE NOTICE '-1';
+        END IF;
+        RAISE NOTICE '%', v_student;
+    END LOOP;
+
+    CLOSE cur_alunos_sozinhos;
+END $$
 
 -- ----------------------------------------------------------------
 -- 4 Salário versus estudos
