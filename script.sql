@@ -105,4 +105,20 @@ END $$
 -- 5. Limpeza de valores NULL
 --escreva a sua solução aqui
 
+DO $$
+    DECLARE
+        cur_deleta_nulos REFCURSOR;
+        v_tupla RECORD;
+    BEGIN
+        OPEN cur_deleta_nulos SCROLL FOR
+        SELECT * from tb_student_prediction;
+    LOOP
+        FETCH cur_deleta_nulos INTO v_tupla;
+        EXIT WHEN NOT FOund;
+
+        IF v_tupla.studentid ISNULL OR v_tupla.partner ISNULL OR v_tupla.mother_edu ISNULL OR v_tupla.father_edu ISNULL OR v_tupla.salary ISNULL OR v_tupla.prep_exam ISNULL OR v_tupla.grade ISNULL
+    END LOOP;
+
+END $$
+
 -- ----------------------------------------------------------------
