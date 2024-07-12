@@ -99,7 +99,7 @@ DO $$
     END LOOP;
 
     CLOSE cur_salario_frequencia;
-END $$
+END $$;
 
 -- ----------------------------------------------------------------
 -- 5. Limpeza de valores NULL
@@ -116,9 +116,19 @@ DO $$
         FETCH cur_deleta_nulos INTO v_tupla;
         EXIT WHEN NOT FOund;
 
-        IF v_tupla.studentid ISNULL OR v_tupla.partner ISNULL OR v_tupla.mother_edu ISNULL OR v_tupla.father_edu ISNULL OR v_tupla.salary ISNULL OR v_tupla.prep_exam ISNULL OR v_tupla.grade ISNULL
+        RAISE NOTICE 'antes de delete: %', v_tupla;
+        IF v_tupla.studentid ISNULL OR v_tupla.partner ISNULL OR v_tupla.mother_edu ISNULL OR v_tupla.father_edu ISNULL OR v_tupla.salary ISNULL OR v_tupla.prep_exam ISNULL OR v_tupla.grade ISNULL THEN
+            DELETE FROM tb_student_prediction
+            WHERE CURRENT OF cur_deleta_nulos;
+
+        END IF;
     END LOOP;
 
+    LOOP FETCH BACKWARD from cur_deleta_nulos into v_tupla;
+        EXIT WHEN NOT FOUND;
+        RAISE NOTICE 'DEPOIS DO DELETE %', v_tupla;
+    END LOOP;
+    CLOSE cur_deleta_nulos;
 END $$
 
 -- ----------------------------------------------------------------
