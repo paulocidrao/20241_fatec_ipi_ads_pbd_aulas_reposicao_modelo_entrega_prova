@@ -73,12 +73,33 @@ DO $$
     END LOOP;
 
     CLOSE cur_alunos_sozinhos;
-END $$
+END $$;
 
 -- ----------------------------------------------------------------
 -- 4 Salário versus estudos
 --escreva a sua solução aqui
 
+DO $$
+    DECLARE
+        cur_salario_frequencia CURSOR FOR
+        SELECT count(studentid) from tb_student_prediction
+        where salary = 5
+        AND prep_exam = 2;
+
+        v_students int;
+    BEGIN
+        OPEN cur_salario_frequencia;
+
+    LOOP
+        FETCH cur_salario_frequencia into v_students;
+
+        EXIT WHEN NOT FOUND;
+
+        RAISE NOTICE '%', v_students;
+    END LOOP;
+
+    CLOSE cur_salario_frequencia;
+END $$
 
 -- ----------------------------------------------------------------
 -- 5. Limpeza de valores NULL
